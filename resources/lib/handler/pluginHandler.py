@@ -172,6 +172,7 @@ class cPluginHandler:
                     if xbmcaddon.Addon().getSetting('plugin_' + provider) == 'false':  # Wenn SitePlugin deaktiviert
                         cConfig().setSetting('global_search_' + provider, 'false')  # setzte Globale Suche auf aus
                         cConfig().setSetting('plugin_' + provider + '_checkdomain', 'false')  # setzte Domain Check auf aus
+                        xbmcaddon.Addon().setSetting('plugin_' + provider + '.domain', '')  # lösche Settings Eintrag
 
                     if xbmcaddon.Addon().getSetting('plugin_' + provider + '_checkdomain') == 'true':  # aut. Domainüberprüfung an ist überprüfe Status der Sitplugins
                         oRequest = cRequestHandler(base_link, caching=False, ignoreErrors=True)
@@ -181,7 +182,7 @@ class cPluginHandler:
                         if 403 <= status_code <= 503:  # Domain Interner Server Error und nicht erreichbar
                             cConfig().setSetting('global_search_' + provider, 'false')  # deaktiviere Globale Suche
                             log(LOGMESSAGE + ' -> [checkDomain]: Internal Server Error (DDOS Guard, HTTP Error, Cloudflare or BlazingFast active)', LOGNOTICE)
-                        if 300 <= status_code <= 400:  # Domain erreichbar mit Umleitung
+                        elif 300 <= status_code <= 400:  # Domain erreichbar mit Umleitung
                             url = oRequest.getRealUrl()
                             # cConfig().setSetting('plugin_'+ provider +'.base_link', url)
                             cConfig().setSetting('plugin_' + provider + '.domain', urlparse(url).hostname)  # setze Domain in die settings.xml
@@ -197,9 +198,11 @@ class cPluginHandler:
                         else:
                             log(LOGMESSAGE + ' -> [checkDomain]: Error ' + provider + ' not available.', LOGNOTICE)
                             cConfig().setSetting('global_search_' + provider, 'false')  # deaktiviere Globale Suche
+                            xbmcaddon.Addon().setSetting('plugin_' + provider + '.domain', '')  # lösche Settings Eintrag
                             log(LOGMESSAGE + ' -> [checkDomain]: globalSearch for ' + provider + ' is deactivated.', LOGNOTICE)
                 except:
                     cConfig().setSetting('global_search_' + provider, 'false')  # deaktiviere Globale Suche
+                    xbmcaddon.Addon().setSetting('plugin_' + provider + '.domain', '')  # lösche Settings Eintrag
                     log(LOGMESSAGE + ' -> [checkDomain]: Error ' + provider + ' not available.', LOGNOTICE)
                     pass
             except Exception:

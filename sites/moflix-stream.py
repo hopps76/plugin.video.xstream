@@ -31,7 +31,7 @@ URL_MAIN = 'https://' + DOMAIN + '/'
 # URL_MAIN = 'https://moflix-stream.xyz/'
 # Movie / Series / Search Links
 URL_MOVIES = URL_MAIN + 'api/v1/channel/movies?channelType=channel&restriction=&paginate=simple'
-URL_SERIES = URL_MAIN + 'api/v1/channel/series?channelType=channel&restriction=&paginate=simple'
+URL_SERIES = URL_MAIN + 'api/v1/channel/trending-tv?channelType=channel&restriction=&paginate=simple'
 URL_SEARCH = URL_MAIN + 'api/v1/search/%s?query=%s&limit=8'
 # Hoster
 URL_HOSTER = URL_MAIN + 'api/v1/titles/%s?load=images,genres,productionCountries,keywords,videos,primaryVideo,seasons,compactCredits'
@@ -61,7 +61,7 @@ def showEntries(entryUrl=False, sGui=False):
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 6  # 6 Stunden
     jSearch = json.loads(oRequest.request())  # Lade JSON aus dem Request der URL
-    if not 'success' in jSearch['status']: return  # Status success dann weiter
+    if not jSearch: return  # Wenn Suche erfolglos - Abbruch
     aResults = jSearch['channel']['content']['data']
     total = len(aResults)
     if len(aResults) == 0:
@@ -113,7 +113,7 @@ def showSeasons(sGui=False):
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 6  # 6 Stunden
     jSearch = json.loads(oRequest.request()) # Lade JSON aus dem Request der URL
-    if not 'success' in jSearch['status']: return # Status success dann weiter
+    if not jSearch: return  # Wenn Suche erfolglos - Abbruch
     sDesc = jSearch['title']['description'] # Lade Beschreibung aus JSON
     aResults = jSearch['seasons']['data']
     aResults = sorted(aResults, key=lambda k: k['number'])  # Sortiert die Staffeln nach Nummer aufsteigend
@@ -142,14 +142,15 @@ def showEpisodes(sGui=False):
     # Parameter laden
     sId = params.getValue('sId')
     sSeasonNr = params.getValue('sSeasonNr')
-    sUrl = URL_MAIN + 'api/v1/titles/%s/seasons/%s?load=episodes,primaryVideo' % (sId, sSeasonNr)
+    sUrl = URL_MAIN + 'api/v1/titles/%s/seasons/%s/episodes?perPage=100&query=&page=1' % (sId, sSeasonNr) #Hep 02.12.23: Abfrage für einzelne Episoden per query force auf 100 erhöht
     oRequest = cRequestHandler(sUrl)
     oRequest.addHeaderEntry('Referer', sUrl)
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 4  # 4 Stunden
     jSearch = json.loads(oRequest.request()) # Lade JSON aus dem Request der URL
-    if not 'success' in jSearch['status']: return # Status success dann weiter
-    aResults = jSearch['episodes']['data'] # Ausgabe der Suchresultate von jSearch
+    if not jSearch: return  # Wenn Suche erfolglos - Abbruch
+    #aResults = jSearch['episodes']['data'] # Ausgabe der Suchresultate von jSearch
+    aResults = jSearch['pagination']['data']  # Ausgabe der Suchresultate von jSearch
     total = len(aResults) # Anzahl aller Ergebnisse
     if len(aResults) == 0:
         if not sGui: oGui.showInfo()
@@ -172,6 +173,7 @@ def showEpisodes(sGui=False):
 
 
 def showSearchEntries(entryUrl=False, sGui=False, sSearchText=''):
+
     oGui = sGui if sGui else cGui()
     params = ParameterHandler()
     # Parameter laden
@@ -179,7 +181,7 @@ def showSearchEntries(entryUrl=False, sGui=False, sSearchText=''):
     oRequest = cRequestHandler(entryUrl, ignoreErrors=(sGui is not False))
     oRequest.addHeaderEntry('Referer', entryUrl)
     jSearch = json.loads(oRequest.request()) # Lade JSON aus dem Request der URL
-    if not 'success' in jSearch['status']: return # Status success dann weiter
+    if not jSearch: return  # Wenn Suche erfolglos - Abbruch
     aResults = jSearch['results'] # Ausgabe der Suchresultate von jSearch
     total = len(aResults) # Anzahl aller Ergebnisse
     if len(aResults) == 0: # Wenn Resultate 0 zeige Benachrichtigung
@@ -219,7 +221,7 @@ def showHosters(sGui=False):
     oRequest = cRequestHandler(sUrl)
     oRequest.addHeaderEntry('Referer', sUrl)
     jSearch = json.loads(oRequest.request())  # Lade JSON aus dem Request der URL
-    if not 'success' in jSearch['status']: return  # Status success dann weiter
+    if not jSearch: return  # Wenn Suche erfolglos - Abbruch
     if ParameterHandler().getValue('mediaType') == 'movie': #Bei MediaTyp Filme nutze das Result
         aResults = jSearch['title']['videos'] # Ausgabe der Suchresultate von jSearch für Filme
     else:
@@ -231,7 +233,7 @@ def showHosters(sGui=False):
     for i in aResults:
         sName = i['name'].split('-')[0].strip()
         sQuality = str(i['quality'])
-        if sQuality != '': sQuality = '720p'
+        if 'None' in sQuality: sQuality = '720p'
         sUrl = i['src']
         if cConfig().isBlockedHoster(sUrl)[0]: continue  # Hoster aus settings.xml oder deaktivierten Resolver ausschließen
         if 'youtube' in sUrl: continue # Trailer ausblenden

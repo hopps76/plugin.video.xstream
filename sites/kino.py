@@ -23,9 +23,9 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'kino.ws')
+DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'wwv.kino.ws')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://kino.ws/'
+#URL_MAIN = 'https://wwv.kino.ws/'
 URL_MOVIES = URL_MAIN + 'filme-kostenlos.html'
 URL_SERIES = URL_MAIN + 'serien-kostenlos.html'
 URL_SEARCH = URL_MAIN + 'recherche?_token=kZDYEMkRbBXOKMQbZZOnGOaR9JMeGAjXpzKtj0s3&q=%s'

@@ -6,8 +6,7 @@
     #showYears:     48 Stunden
     #showEntries:    6 Stunden
     #showEpisodes:   4 Stunden
-    
-import resolveurl
+
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.tools import logger, cParser, cUtil

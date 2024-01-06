@@ -1,41 +1,36 @@
-[B]Version: 4.0.7~Release[/B]
+[B]Version: 4.0.8[/B]
 
-01.08.2023 - 31.08.2023
+01.09.2023 - 05.01.2024
 
- - [HDFilme] Seite hinzugefügt (Domain: hdfilme.mom)
- - [GuiElement] Erweiterung setQuality
- - [Settings] Code Anpassung der Indexseiten
- - [CineClix] Code Anpassungen bei der Suche für Episoden
- - [Moflix-Stream] Code Anpassungen bei der Suche für Episoden
- - [Moflix-Stream] Code Anpassungen wegen neuem Webseiten Design
- - [CineClix] Code Anpassungen
- - [Movie2k] wieder hinzugefügt
- - [Cinemathek] StreamSB ausgeblendet
- - [Settings] bereinigt
- - [Cinemathek] Code Anpassungen
- - [CineClix] Neue Seite hinzugefügt
-   + Experimentelles Plugin Benutzung auf eigene Gefahr!
-   + Globale Suche + Domain Aktualisierung muss selbst aktiviert werden!
- - [GuiElement] Code Anpassungen
- - [Kino] Code Anpassungen
- - [Kinoger] Code Anpassungen
-   + Kinoger.pw (StreamSB) Code entfernt
-   + Kinoger.re Code entfernt
- - [Kinox] URL Anpassung
- - [Moflix-Stream] Neue Seite hinzugefügt
- - [Movie4k] Seite wieder hinzugefügt
-   + Code Anpassungen
-   + Aktuelle Domain einstellen!! movie4k.buzz
- - [StreamPalace] Code Anpassungen
- - [StreamWorld] Seite entfernt
- - [Stumbleupon]
-   + Experimentelles Plugin Benutzung auf eigene Gefahr!
-   + Globale Suche + Domain Aktualisierung muss selbst aktiviert werden!
- - [xCine] Menü Neues hinzugefügt
- - [Cinemathek] Regex fixed
- - [Tools] quote hinzugefügt
- - [Cinemathek] Regex fixed
- - [StreamPalace] neue Seite hinzugefügt
+ - [HDFilme] letzte Domain offline (Wechsel auf www.hdfilme.tel)
+ - [CheckDomain] überarbeitet. Wenn Seite nicht erreichbar dann Domain löschen.
+ - [Updatemanager] überarbeitet für Resolver Update und xStream Versionen
+ - [Settings] angepasst für xStream Versionen
+ - [Sprachdateien] hinzugefügt (Nach Update Neustart erforderlich)
+ - [Cineclix] Film bzw. Serienmenü erstellt 
+   (kleines) Genre (ohne Filterfunktion) hinzugefügt
+   Anpassung Qualitätsanzeige
+ - [Cinemathek] Fix: Nächste Seite 
+   Anpassung Qualitätsanzeige
+   Neue Episoden überarbeitet
+ - [HDFilme] Aktualisierung der Domain
+ - [Kino] Aktualisierung der Domain
+ - [Moflix-Stream] Anpassung Qualitätsanzeige
+ - [Movie4k] Aktualisierung der Domain
+ - [Streamcloud] Aktualisierung der Domain
+ - [xCine] Überflüssigen Code entfernt
+ - [moflix-stream] Fix: Staffeln mit mehr als 30 Episoden wurden nicht korrekt angezeigt
+ - [Movieking.cc] deaktiviert
+ - [Cineclix] Fix: Erste Staffel wird bei mehr als acht Staffeln nicht mehr angezeigt
+ - [xstream] Code maintenance
+ - [Movieking] Fix für falsche Domain, temporär nicht erreichbar wegen reCaptcha
+ - [Kinofox] Offline -> deaktiviert
+ - [Stumbleupon] Offline -> deaktiviert
+ - [xstream] Anpassung Zensurmeldung
+ - [Flimmerstube] Vorwärts Blättern funktioniert nicht behoben (requesthandler)
+ - [Serienstream] Neuen Proxyserver in Einstellungen übernommen
+ - [CineClix] Update Plugin
+ - [Moflix-Stream] Update Plugin
 
 [COLOR cyan]________________________________________________________________________________________[/COLOR]
 [I]*Editierhinweis: Text nicht länger als die Linie. Keine Tabulatoren verwenden![/I]

@@ -24,8 +24,9 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'streamcloud.best')
+DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'streamcloud.movie')
 URL_MAIN = 'https://' + DOMAIN + '/'
+# URL_MAIN = 'https://streamcloud.movie/'
 URL_MAINPAGE = URL_MAIN + 'streamcloud/'
 URL_MOVIES = URL_MAIN + 'filme-stream/'
 URL_KINO = URL_MAIN + 'kinofilme/'
@@ -34,7 +35,7 @@ URL_SERIES = URL_MAIN + 'serien/'
 URL_NEW = URL_MAIN + 'neue-filme/'
 URL_SEARCH = URL_MAIN + 'index.php?story=%s&do=search&subaction=search'
 
-
+#ToDo Serien auch auf reinen Filmseiten, prüfen ob Filterung möglich
 def load(): # Menu structure of the site plugin
     logger.info('Load %s' % SITE_NAME)
     params = ParameterHandler()
@@ -42,8 +43,8 @@ def load(): # Menu structure of the site plugin
     cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30501), SITE_IDENTIFIER, 'showEntries'), params)  # Current films in the cinema
     params.setParam('sUrl', URL_NEW)
     cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30500), SITE_IDENTIFIER, 'showEntries'), params)  # New Movies
-    params.setParam('sUrl', URL_FAVOURITE_MOVIE_PAGE)
-    cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30521), SITE_IDENTIFIER, 'showEntries'), params)  # Favorite Movies
+    #params.setParam('sUrl', URL_FAVOURITE_MOVIE_PAGE)
+    #cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30521), SITE_IDENTIFIER, 'showEntries'), params)  # Favorite Movies #ToDo Auskommentiert da URL auf Webseite fehlerhaft, zukünftig prüfen ob Fehler behoben
     #params.setParam('sUrl', URL_MOVIES)
     #cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30502), SITE_IDENTIFIER, 'showEntries'), params)  # Movies #ToDo Auskommentiert da URL auf Webseite fehlerhaft, zukünftig prüfen ob Fehler behoben
     params.setParam('sUrl', URL_MAINPAGE)

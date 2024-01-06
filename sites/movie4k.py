@@ -23,9 +23,9 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'movie4k.buzz')
+DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'www.movie4k.quest')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://movie4k.buzz/'
+#URL_MAIN = 'https://www.movie4k.quest/'
 URL_KINO = URL_MAIN + 'aktuelle-kinofilme-im-kino'
 URL_MOVIES = URL_MAIN + 'kinofilme-online'
 URL_SERIES = URL_MAIN + 'serienstream-deutsch'

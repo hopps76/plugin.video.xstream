@@ -77,6 +77,7 @@ def showRegs():
     oRequest = cRequestHandler(sUrl)
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 48  # 48 Stunden
+    iPage = int(params.getValue('page'))
     sHtmlContent = oRequest.request()
     pattern = '<ul class="sub-menu"><li id="menu-item-26052".*?</ul>' # Alle Einträge in dem Bereich suchen
     isMatch, sHtmlContainer = cParser.parseSingleResult(sHtmlContent, pattern)
@@ -99,6 +100,8 @@ def showEntries(entryUrl=False, sGui=False, sSearchText=False):
     oRequest = cRequestHandler(entryUrl, ignoreErrors=sGui is not False)
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 6  # HTML Cache Zeit 6 Stunden
+    iPage = int(params.getValue('page'))
+    oRequest = cRequestHandler(entryUrl + 'page/' + str(iPage) if iPage > 0 else entryUrl, ignoreErrors=(sGui is not False))
     sHtmlContent = oRequest.request()
     # Für Filme und Serien Content
     pattern = '<article id=.*?'  # container start
@@ -151,11 +154,16 @@ def showEntries(entryUrl=False, sGui=False, sSearchText=False):
         params.setParam('entryUrl', sUrl)
         params.setParam('sName', sName)
         oGui.addFolder(oGuiElement, params, isTvshow, total)
+
     if not sGui and not sSearchText:
-        isMatchNextPage, sNextUrl = cParser.parseSingleResult(sHtmlContent, '<link[^>]*rel="next"[^>]*href="([^"]+)"') # Nächste Seite
-        if isMatchNextPage:
-            params.setParam('sUrl', sNextUrl)
-            oGui.addNextPage(SITE_IDENTIFIER, 'showEntries', params)
+        sPageNr = int(params.getValue('page'))
+        if sPageNr == 0:
+            sPageNr = 2
+        else:
+            sPageNr += 1
+        params.setParam('page', int(sPageNr))
+        params.setParam('sUrl', entryUrl)
+        oGui.addNextPage(SITE_IDENTIFIER, 'showEntries', params)
         oGui.setView('tvshows' if isTvshow else 'movies')
         oGui.setEndOfDirectory()
 
@@ -167,6 +175,8 @@ def showNewEpisodes(entryUrl=False, sGui=False, sSearchText=False):
     oRequest = cRequestHandler(entryUrl, ignoreErrors=sGui is not False)
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 6  # HTML Cache Zeit 6 Stunden
+    iPage = int(params.getValue('page'))
+    oRequest = cRequestHandler(entryUrl + 'page/' + str(iPage) if iPage > 0 else entryUrl, ignoreErrors=(sGui is not False))
     sHtmlContent = oRequest.request()
     # Für die Suche von Neuen Episoden
     pattern = '<article.*?'  # container start
@@ -181,10 +191,13 @@ def showNewEpisodes(entryUrl=False, sGui=False, sSearchText=False):
     total = len(aResult)
     for sThumbnail, sUrl, sName, sSeason, sEpisode, sDummy in aResult:
         isEpisode, aResult = cParser.parse(sUrl, 'episoden') # Im Episoden Content auffindbar
+        isYear, sYear = cParser.parseSingleResult(sDummy, '([\d]+)</span>\s<span class="serie')  # Release Jahr
         isTVShowTitle, sTVShowTitle = cParser.parseSingleResult(sDummy, 'class="serie">([^<]+)')  # Serien Titel
-        isYear, sYear = cParser.parseSingleResult(sDummy, '([\d]+)</span>\s<span class="serie') # Release Jahr
         if isEpisode is True:
-            oGuiElement = cGuiElement('Staffel ' + sSeason + ' Episode '+ sEpisode + ' - ' + sName, SITE_IDENTIFIER, 'showHosters')
+            if isTVShowTitle is True:
+                oGuiElement = cGuiElement(sTVShowTitle + ' - Staffel ' + sSeason + ' Episode '+ sEpisode + ' - ' + sName, SITE_IDENTIFIER, 'showHosters')
+            else:
+                oGuiElement = cGuiElement('Staffel ' + sSeason + ' Episode ' + sEpisode + ' - ' + sName, SITE_IDENTIFIER, 'showHosters')
         else:
             continue
         oGuiElement.setThumbnail(sThumbnail)
@@ -200,14 +213,18 @@ def showNewEpisodes(entryUrl=False, sGui=False, sSearchText=False):
         params.setParam('entryUrl', sUrl)
         params.setParam('sName', sName)
         cGui().addFolder(oGuiElement, params, False, total)
+
     if not sGui and not sSearchText:
-        isMatchNextPage, sNextUrl = cParser.parseSingleResult(sHtmlContent, '<link[^>]*rel="next"[^>]*href="([^"]+)"') # Nächste Seite
-        if isMatchNextPage:
-            params.setParam('sUrl', sNextUrl)
-            oGui.addNextPage(SITE_IDENTIFIER, 'showNewEpisodes', params)
+        sPageNr = int(params.getValue('page'))
+        if sPageNr == 0:
+            sPageNr = 2
+        else:
+            sPageNr += 1
+        params.setParam('page', int(sPageNr))
+        params.setParam('sUrl', entryUrl)
+        oGui.addNextPage(SITE_IDENTIFIER, 'showNewEpisodes', params)
         cGui().setView('episodes')
         cGui().setEndOfDirectory()
-
 
 def showSeasons():
     params = ParameterHandler()
