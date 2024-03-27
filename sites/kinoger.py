@@ -2,30 +2,31 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showGenre:     48 Stunden
-    #showEntries:    6 Stunden
-    #showSeasons:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showGenre:     48 Stunden
+# showEntries:    6 Stunden
+# showSeasons:    6 Stunden
+# showEpisodes:   4 Stunden
 
 import base64
 import binascii
-import random
-import string
+import hashlib
+import re
+import json
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
-from resources.lib.tools import logger, cParser, cUtil
+from resources.lib.tools import logger, cParser
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
-from resources.lib import jsunpacker
+from resources.lib import pyaes
 from itertools import zip_longest as ziplist
 
 SITE_IDENTIFIER = 'kinoger'
-SITE_NAME = 'Kinoger'
+SITE_NAME = 'KinoGer'
 SITE_ICON = 'kinoger.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
@@ -247,7 +248,7 @@ def showEpisodes():
 
 def showHosters():
     hosters = []
-    headers = '&Accept-Language=de%2Cen-US%3Bq%3D0.7%2Cen%3Bq%3D0.3&Accept=%2A%2F%2A&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A99.0%29+Gecko%2F20100101+Firefox%2F99.0'
+    headers = '&Accept-Language=de%2Cde-DE%3Bq%3D0.9%2Cen%3Bq%3D0.8%2Cen-GB%3Bq%3D0.7%2Cen-US%3Bq%3D0.6&Accept=%2A%2F%2A&User-Agent=Mozilla%2F5.0+%28Windows+NT+10.0%3B+Win64%3B+x64%3B+rv%3A99.0%29+Gecko%2F20100101+Firefox%2F99.0'
     params = ParameterHandler()
     if params.exist('sLinks'):
         sUrl = params.getValue('sLinks')
@@ -260,22 +261,42 @@ def showHosters():
     if isMatch:
         for sUrl in aResult:
             try:
-                if 'kinoger.be' in sUrl:
+                if 'kinoger.ru' in sUrl:
                     oRequest = cRequestHandler(sUrl, caching=False, ignoreErrors=True)
                     oRequest.addHeaderEntry('Referer', 'https://kinoger.com/')
-                    sHtmlContent = oRequest.request() # Durchsucht sHtml Content
+                    sHtmlContent = oRequest.request()  # Durchsucht sHtml Content
+                    if isMatch:
+                        decryptHtmlContent = content_decryptor(sHtmlContent, 'a7igbpIApajDyNe') # Decrypt Content
+                        isMatch, hUrl = cParser.parseSingleResult(decryptHtmlContent, 'sources.*?file.*?(http[^"]+)')
+                    if isMatch:
+                        hUrl = hUrl.replace('\\', '')
+                        oRequest = cRequestHandler(hUrl, caching=False, ignoreErrors=True)
+                        oRequest.addHeaderEntry('Referer', 'https://kinoger.ru/')
+                        oRequest.addHeaderEntry('Origin', 'https://kinoger.ru')
+                        oRequest.removeNewLines(False)
+                        sHtmlContent = oRequest.request()
+                        if not 'MEDIA:TYPE=AUDIO' in sHtmlContent: # Wenn keine zusätzlichen Audiostreams vorhanden durchsuche m3u8 und filter Links aus
+                            pattern = 'RESOLUTION=.*?x(\d+).*?\n([^\s]+)'
+                            isMatch, aResult = cParser.parse(sHtmlContent, pattern)
+                            if isMatch:
+                                for sQuality, sUrl in aResult:
+                                    sUrl = (hUrl.split('video')[0].strip() + sUrl.strip())
+                                    sUrl = sUrl + '|verifypeer=false&Referer=https%3A%2F%2Fkinoger.ru%2F&Origin=https%3A%2F%2Fkinoger.ru' + headers
+                                    hoster = {'link': sUrl, 'name': 'KinoGer.ru [I][%sp][/I]' % sQuality, 'quality': sQuality, 'resolveable': True}
+                                    hosters.append(hoster)
+                        else: # Wenn Audiostreams enthalten nutze video.m3u8 und lese Content daraus
+                            sUrl = hUrl + '|verifypeer=false&Referer=https%3A%2F%2Fkinoger.ru%2F&Origin=https%3A%2F%2Fkinoger.ru' + headers
+                            hoster = {'link': sUrl, 'name': 'KinoGer.ru [I][Video/Audio auswählbar][/I]', 'resolveable': True}
+                            hosters.append(hoster)
+
+                elif 'kinoger.be' in sUrl:
+                    oRequest = cRequestHandler(sUrl, caching=False, ignoreErrors=True)
+                    oRequest.addHeaderEntry('Referer', 'https://kinoger.com/')
+                    sHtmlContent = oRequest.request()
                     isMatch, packed = cParser.parseSingleResult(sHtmlContent, '(eval\s*\(function.*?)</script>')
                     if isMatch:
+                        from resources.lib import jsunpacker
                         sHtmlContent = jsunpacker.unpack(packed)
-                    isMatch, j = cParser.parse(sHtmlContent, 'ct":"([^"]+)","iv":"([^"]+)","s":"([^"]+)')
-                    if isMatch:
-                        try:
-                            ciphertext = base64.b64decode(j[0][0])
-                            salt = binascii.unhexlify(j[0][2])
-                            password = 'XOmurdOgNnjMwYah'.encode('utf-8')
-                            sHtmlContent = cUtil.evp_decode(ciphertext, password, salt)
-                        except Exception:
-                            sHtmlContent = ''
                     isMatch, hUrl = cParser.parseSingleResult(sHtmlContent, 'sources.*?file.*?(http[^"]+)')
                     if isMatch:
                         hUrl = hUrl.replace('\\', '')
@@ -284,44 +305,69 @@ def showHosters():
                         oRequest.addHeaderEntry('Origin', 'https://kinoger.be')
                         oRequest.removeNewLines(False)
                         sHtmlContent = oRequest.request()
-                        pattern = 'RESOLUTION=.*?x(\d+).*?\n([^#"]+)'
-                        isMatch, aResult = cParser.parse(sHtmlContent, pattern)
+                        if 'CF-DDOS-GUARD aktiv' in sHtmlContent: # Wenn Request eine 403 zurückgibt dann überspringen
+                            continue
+                        else:
+                            pattern = 'RESOLUTION=.*?x(\d+).*?\n(index[^\n]+)'
+                            isMatch, aResult = cParser.parse(sHtmlContent, pattern)
                     if isMatch:
                         for sQuality, sUrl in aResult:
                             sUrl = (hUrl.split('video')[0].strip() + sUrl.strip())
                             sUrl = sUrl + '|Origin=https%3A%2F%2Fkinoger.be&Referer=https%3A%2F%2Fkinoger.be%2F' + headers
-                            hoster = {'link': sUrl, 'name': 'Kinoger.be [I][%sp][/I]' % sQuality, 'quality': sQuality, 'resolveable': True}
+                            hoster = {'link': sUrl, 'name': 'KinoGer.be [I][%sp][/I]' % sQuality, 'quality': sQuality, 'resolveable': True}
                             hosters.append(hoster)
 
-                elif 'kinoger.pw' in sUrl: continue # Offline
+                elif 'kinoger.pw' in sUrl:
+                    oRequest = cRequestHandler(sUrl, caching=False, ignoreErrors=True)
+                    oRequest.addHeaderEntry('Referer', 'https://kinoger.com/')
+                    sHtmlContent = oRequest.request()
+                    isMatch, hUrl = cParser.parse(sHtmlContent, "urlPlay\s=\s'(http[^']+)")
+                    if isMatch:
+                        oRequest = cRequestHandler(hUrl[0], caching=False, ignoreErrors=True)
+                        oRequest.addHeaderEntry('Origin', 'https://kinoger.pw')
+                        oRequest.addHeaderEntry('Referer', 'https://kinoger.pw/')
+                        sHtmlContent = oRequest.request()
+                        if 'CF-DDOS-GUARD aktiv' in sHtmlContent: # Wenn Request eine 403 zurückgibt dann überspringen
+                            continue
+                        else:
+                            isMatch, aResult = cParser.parse(sHtmlContent, 'RESOLUTION=.*?x(\d+).*?"(hls[^#]+)')
+                    if isMatch:
+                        for sQuality, sUrl in aResult:
+                            stripUrl = hUrl[0].strip('master.m3u8')
+                            sUrl = (stripUrl + sUrl)
+                            sUrl = sUrl + '|Origin=https%3A%2F%2Fkinoger.pw&Referer=https%3A%2F%2Fkinoger.pw%2F' + headers
+                            hoster = {'link': sUrl, 'name': 'KinoGer.pw [I][%sp][/I]' % sQuality, 'quality': sQuality, 'resolveable': True}
+                            hosters.append(hoster)
+
+                # Ausschluß defekter Hoster
                 elif 'kinoger.re' in sUrl: continue # Offline
                 elif 'start.u' in sUrl: continue # Offline
-                elif 'delivery' in sUrl: continue
-                elif 'cdn0' in sUrl: continue
-                elif 'kinoger.ru' in sUrl: continue # Cloudflare aktiv
+                elif 'delivery' in sUrl: continue # Offline
+                elif 'cdn0' in sUrl: continue # Offline
                 elif 'hd-stream.to' in sUrl: continue # Offline
-                elif 'protonvideo' in sUrl: continue # Offline
+                elif 'protonvideo' in sUrl: continue  # Offline
+                elif 'embedv.net' in sUrl: continue  # Offline
 
-                else:
-                    sQuality = '720p'
+                else: # Alle anderen Hoster
+                    sQuality = '720'
                     sName = cParser.urlparse(sUrl)
-                    for x in (('Kinoger.Be', 'StreamHide'), ('Fsst.Online', 'SecVideo')):
-                        sName = sName.replace(*x)
-                    hoster = {'link': sUrl + 'DIREKT', 'name': sName, 'displayedName': '%s [I][%s][/I]' % (sName, sQuality), 'quality': sQuality, 'resolveable': True}
+                    if cConfig().isBlockedHoster(sName)[0]: continue  # Hoster aus settings.xml oder deaktivierten Resolver ausschließen
+                    hoster = {'link': sUrl + 'DIREKT', 'name': sName, 'displayedName': '%s [I][%sp][/I]' % (sName, sQuality), 'quality': sQuality, 'resolveable': True}
                     hosters.append(hoster)
+
             except Exception:
                 pass
+
+    if not isMatch:
+        return
+
     if hosters:
         hosters.append('getHosterUrl')
-        return hosters
+    return hosters
 
 
 def getHosterUrl(sUrl=False):
     if sUrl.endswith('DIREKT'):
-        if 'kinoger.be' in sUrl:
-            sUrl = sUrl.replace('https://kinoger.be/', 'https://streamhide.com/')
-            return [{'streamUrl': sUrl[:-6], 'resolved': False}]
-
         Request = cRequestHandler(sUrl, caching=False)
         Request.request()
         sUrl = Request.getRealUrl()  # hole reale URL von der Umleitung
@@ -342,15 +388,39 @@ def _search(oGui, sSearchText):
     showEntries(URL_MAIN, oGui, sSearchText)
 
 
-def get_streamsburl(host, media_id): # StreamSB Url Abfrage
-    # Copyright (c) 2019 vb6rocod
+def content_decryptor(html_content,passphrase):
+    match = re.compile(r'''JScripts = '(.+?)';''', re.DOTALL).search(html_content)
+    if match:
+        # Parse the JSON string
+        json_obj = json.loads(match.group(1))
 
-    def makeid(length):
-        t = string.ascii_letters + string.digits
-        return ''.join([random.choice(t) for _ in range(length)])
+        # Extract the salt, iv, and ciphertext from the JSON object
+        salt = binascii.unhexlify(json_obj["s"])
+        iv = binascii.unhexlify(json_obj["iv"])
+        ct = base64.b64decode(json_obj["ct"])
 
-    x = '{0}||{1}||{2}||streamsb'.format(makeid(12), media_id, makeid(12))
-    c1 = binascii.hexlify(x.encode('utf8')).decode('utf8')
-    x = '7Vd5jIEF2lKy||nuewwgxb1qs'
-    c2 = binascii.hexlify(x.encode('utf8')).decode('utf8')
-    return 'https://{0}/{1}7/{2}'.format(host, c2, c1)
+        # Concatenate the passphrase and the salt
+        concated_passphrase = passphrase.encode() + salt
+
+        # Compute the MD5 hashes
+        md5 = [hashlib.md5(concated_passphrase).digest()]
+        result = md5[0]
+        i = 1
+        while len(result) < 32:
+            md5.append(hashlib.md5(md5[i - 1] + concated_passphrase).digest())
+            result += md5[i]
+            i += 1
+
+        # Extract the key from the result
+        key = result[:32]
+
+        # Decrypt the ciphertext using AES-256-CBC
+        aes = pyaes.AESModeOfOperationCBC(key, iv)
+        decrypter = pyaes.Decrypter(aes)
+        plain_text = decrypter.feed(ct)
+        plain_text += decrypter.feed()
+
+        # Return the decrypted data as a JSON object
+        return json.loads(plain_text.decode())
+    else:
+        return None

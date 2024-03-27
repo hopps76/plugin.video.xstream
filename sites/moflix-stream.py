@@ -30,9 +30,12 @@ DOMAIN = cConfig().getSetting('plugin_' + SITE_IDENTIFIER + '.domain', 'moflix-s
 URL_MAIN = 'https://' + DOMAIN + '/'
 # URL_MAIN = 'https://moflix-stream.xyz/'
 # Movie / Series / Search Links
+URL_NEW = URL_MAIN + 'api/v1/channel/now-playing?channelType=channel&restriction=&paginate=simple'
 URL_MOVIES = URL_MAIN + 'api/v1/channel/movies?channelType=channel&restriction=&paginate=simple'
 URL_SERIES = URL_MAIN + 'api/v1/channel/trending-tv?channelType=channel&restriction=&paginate=simple'
 URL_SEARCH = URL_MAIN + 'api/v1/search/%s?query=%s&limit=8'
+# Genre
+URL_VALUE = URL_MAIN + 'api/v1/channel/%s?channelType=channel&restriction=&paginate=simple'
 # Hoster
 URL_HOSTER = URL_MAIN + 'api/v1/titles/%s?load=images,genres,productionCountries,keywords,videos,primaryVideo,seasons,compactCredits'
 
@@ -41,11 +44,41 @@ def load():
     logger.info("Load %s" % SITE_NAME)
     params = ParameterHandler()
     params.setParam('page', (1))
+    params.setParam('sUrl', URL_NEW)
+    cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30500), SITE_IDENTIFIER, 'showEntries'), params)  # Neues
     params.setParam('sUrl', URL_MOVIES)
     cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30502), SITE_IDENTIFIER, 'showEntries'), params)  # Movies
+    params.setParam('sUrl', URL_VALUE % 'top-rated-movies')
+    cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30509), SITE_IDENTIFIER, 'showEntries'), params)  # Top Movies
     params.setParam('sUrl', URL_SERIES)
     cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30511), SITE_IDENTIFIER, 'showEntries'), params)  # Series
+    cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30543), SITE_IDENTIFIER, 'showCollections'), params)  # Collections
     cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30520), SITE_IDENTIFIER, 'showSearch'))  # Search
+    cGui().setEndOfDirectory()
+
+
+def showCollections():
+    params = ParameterHandler()
+    params.setParam('sUrl', URL_VALUE % 'the-dc-universum-collection')
+    cGui().addFolder(cGuiElement('The DC Superhelden Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The DC Superhelden Collection
+    params.setParam('sUrl', URL_VALUE % 'fast-furious-movie-collection')
+    cGui().addFolder(cGuiElement('The Fast & Furious Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The DC Superhelden Collection
+    params.setParam('sUrl', URL_VALUE % 'marvel')
+    cGui().addFolder(cGuiElement('The Marvel Cinematic Universe Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Marvel Cinematic Universe Collection
+    params.setParam('sUrl', URL_VALUE % 'bud-spencer-terence-hill-collection')
+    cGui().addFolder(cGuiElement('The Bud Spencer & Terence Hill Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Bud Spencer & Terence Hill Collection
+    params.setParam('sUrl', URL_VALUE % 'the-star-trek-movies-collection')
+    cGui().addFolder(cGuiElement('The Star Trek Kinofilm Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Star Trek Kinofilm Collection
+    params.setParam('sUrl', URL_VALUE % 'the-star-wars-collection')
+    cGui().addFolder(cGuiElement('The Ultimate Star Wars Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Ultimate Star Wars Collection
+    params.setParam('sUrl', URL_VALUE % 'the-james-bond-collection')
+    cGui().addFolder(cGuiElement('The James Bond Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The James Bond Collection
+    params.setParam('sUrl', URL_VALUE % 'the-olsenbande-collection')
+    cGui().addFolder(cGuiElement('The Olsenbande Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Olsenbande Collection
+    params.setParam('sUrl', URL_VALUE % 'the-mission-impossible-collection')
+    cGui().addFolder(cGuiElement('The Ethan Hunt Collection', SITE_IDENTIFIER, 'showEntries'), params)  # The Ethan Hunt Collection
+    params.setParam('sUrl', URL_VALUE % 'top-kids-liste')
+    cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30503), SITE_IDENTIFIER, 'showEntries'), params)  # Kids
     cGui().setEndOfDirectory()
 
 
@@ -72,17 +105,17 @@ def showEntries(entryUrl=False, sGui=False):
         sName = i['name']  # Name des Films / Serie
         if 'is_series' in i: isTvshow = i['is_series']  # Wenn True dann Serie
         oGuiElement = cGuiElement(sName, SITE_IDENTIFIER, 'showSeasons' if isTvshow else 'showHosters')
-        if 'year' in i and len(str(i['year'])) == 4: oGuiElement.setYear(
-            i['year'])  # Suche bei year nach 4 stelliger Zahl
+        if 'release_date' in i and len(str(i['release_date'].split('-')[0].strip())) != '': oGuiElement.setYear(
+            str(i['release_date'].split('-')[0].strip()))
         # sDesc = i['description']
         if 'description' in i and i['description'] != '': oGuiElement.setDescription(
             i['description'])  # Suche nach Desc wenn nicht leer dann setze GuiElement
         # sThumbnail = i['poster']
         if 'poster' in i and i['poster'] != '': oGuiElement.setThumbnail(
-            i['poster'])  # Suche nach Desc wenn nicht leer dann setze GuiElement
+            i['poster'])  # Suche nach Poster wenn nicht leer dann setze GuiElement
         # sFanart = i['backdrop']
         if 'backdrop' in i and i['backdrop'] != '': oGuiElement.setFanart(
-            i['backdrop'])  # Suche nach Desc wenn nicht leer dann setze GuiElement
+            i['backdrop'])  # Suche nach Fanart wenn nicht leer dann setze GuiElement
         oGuiElement.setMediaType('tvshow' if isTvshow else 'movie')
         # Parameter übergeben
         params.setParam('entryUrl', URL_HOSTER % sId)
@@ -173,7 +206,6 @@ def showEpisodes(sGui=False):
 
 
 def showSearchEntries(entryUrl=False, sGui=False, sSearchText=''):
-
     oGui = sGui if sGui else cGui()
     params = ParameterHandler()
     # Parameter laden

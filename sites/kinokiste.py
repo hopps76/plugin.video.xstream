@@ -2,13 +2,13 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showValue:     24 Stunden
-    #showEntries:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showValue:     24 Stunden
+# showEntries:    6 Stunden
+# showEpisodes:   4 Stunden
     
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
-from resources.lib.tools import logger, cParser, cUtil
+from resources.lib.tools import logger, cParser
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
@@ -17,7 +17,7 @@ SITE_IDENTIFIER = 'kinokiste'
 SITE_NAME = 'Kinokiste'
 SITE_ICON = 'kinokistetech.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
@@ -25,7 +25,7 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
 # Domain Abfrage
 DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'kinokiste.cloud')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://kinokiste.cloud/'
+# URL_MAIN = 'https://kinokiste.cloud/'
 URL_NEW = URL_MAIN + 'kinofilme-online/'
 URL_KINO = URL_MAIN + 'aktuelle-kinofilme-im-kino/'
 URL_ANIMATION = URL_MAIN + 'animation/'

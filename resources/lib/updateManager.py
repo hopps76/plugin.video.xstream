@@ -261,22 +261,11 @@ def devUpdates():  # für manuelles Updates vorgesehen
 
         elif result == 0:  # Alle Addons aktualisieren
             # Abfrage ob xStream Release oder Nightly Branch (kann erweitert werden)
-            Dialog().ok(HEADERMESSAGE, cConfig().getLocalizedString(30155))
-            options = ['xStream Release Kodi 19.x Matrix',
-                       'xStream Release Kodi 20.x Nexus',
-                       'xStream Release Kodi 21.x Omega',
-                       'xStream Nightly Kodi 20.x Nexus']
-            result = Dialog().select(HEADERMESSAGE, options)
+            result = Dialog().yesno(HEADERMESSAGE, cConfig().getLocalizedString(30155), yeslabel='Nightly',
+                                    nolabel='Release')
             if result == 0:
-                Addon().setSetting('xstream.branch.release', 'matrix')
                 Addon().setSetting('xstream.branch', 'release')
             elif result == 1:
-                Addon().setSetting('xstream.branch.release', 'nexus')
-                Addon().setSetting('xstream.branch', 'release')
-            elif result == 2:
-                Addon().setSetting('xstream.branch.release', 'omega')
-                Addon().setSetting('xstream.branch', 'release')
-            elif result == 3:
                 Addon().setSetting('xstream.branch', 'nightly')
 
             # Abfrage ob ResolveURL Release oder Nightly Branch (kann erweitert werden)
@@ -299,22 +288,11 @@ def devUpdates():  # für manuelles Updates vorgesehen
 
         elif result == 1:  # xStream aktualisieren
             # Abfrage ob xStream Release oder Nightly Branch (kann erweitert werden)
-            Dialog().ok(HEADERMESSAGE, cConfig().getLocalizedString(30155))
-            options = ['xStream Release (Kodi 19.x)',
-                       'xStream Release (Kodi 20.x)',
-                       'xStream Pre Alpha (Kodi 21.x)',
-                       'xStream Nightly (Kodi 20.x)']
-            result = Dialog().select(HEADERMESSAGE, options)
+            result = Dialog().yesno(HEADERMESSAGE, cConfig().getLocalizedString(30155), yeslabel='Nightly',
+                                    nolabel='Release')
             if result == 0:
-                Addon().setSetting('xstream.branch.release', 'matrix')
                 Addon().setSetting('xstream.branch', 'release')
             elif result == 1:
-                Addon().setSetting('xstream.branch.release', 'nexus')
-                Addon().setSetting('xstream.branch', 'release')
-            elif result == 2:
-                Addon().setSetting('xstream.branch.release', 'omega')
-                Addon().setSetting('xstream.branch', 'release')
-            elif result == 3:
                 Addon().setSetting('xstream.branch', 'nightly')
 
             # Voreinstellung beendet

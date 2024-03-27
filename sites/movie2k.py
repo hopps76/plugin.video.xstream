@@ -6,7 +6,6 @@
 # showEpisodes:   4 Stunden
 
 import re
-import sys
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler

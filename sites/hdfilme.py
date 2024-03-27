@@ -2,10 +2,9 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showGenre:     48 Stunden
-    #showYears:     48 Stunden
-    #showEpisodes:   4 Stunden
-
+# showGenre:     48 Stunden
+# showYears:     48 Stunden
+# showEpisodes:   4 Stunden
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
@@ -18,15 +17,15 @@ SITE_IDENTIFIER = 'hdfilme'
 SITE_NAME = 'HD Filme'
 SITE_ICON = 'hdfilme.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'www.hdfilme.tel')
+DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'www.hdfilme.today')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://www.hdfilme.tel/'
+# URL_MAIN = 'https://www.hdfilme.today/'
 URL_NEW = URL_MAIN + 'kinofilme-online/'
 URL_KINO = URL_MAIN + 'aktuelle-kinofilme-im-kino/'
 URL_MOVIES = URL_MAIN + 'kinofilme-online'

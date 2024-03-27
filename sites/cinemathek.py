@@ -2,10 +2,10 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showGenre:     48 Stunden
-    #showEntries:    6 Stunden
-    #showSeasons:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showGenre:     48 Stunden
+# showEntries:    6 Stunden
+# showSeasons:    6 Stunden
+# showEpisodes:   4 Stunden
     
 import json
 
@@ -28,14 +28,14 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
 # Domain Abfrage
 DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'cinemathek.net')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://cinemathek.net/'
+# URL_MAIN = 'https://cinemathek.net/'
 URL_MOVIES = URL_MAIN + 'filme/'
 URL_SERIES = URL_MAIN + 'serien/'
 URL_NEW_EPISODES = URL_MAIN + 'episoden/'
 URL_SEARCH = URL_MAIN + '?s=%s'
 
 
-def load():
+def load(): # Menu structure of the site plugin
     logger.info('Load %s' % SITE_NAME)
     params = ParameterHandler()
     params.setParam('sUrl', URL_MOVIES)
@@ -314,6 +314,15 @@ def showHosters():
         pattern += 'starten!\s([^<]+)'  # Eintrag [3] = sName des Link Eintrag
         releaseQuality = '>Release:.*?\s*(\d\d\d+)p'  # Hoster Release Quality Kennzeichen
         isMatch, aResult = cParser().parse(sHtmlContent, pattern)
+    if not isMatch:
+        # Wenn kein Hoster hinter Film starten! steht wird das ! als Name genutzt! Ist nicht als Dauerlösung gedacht!
+        pattern = 'player-option-\d.*?'  # Player Option Nr. z.B 1 für Link 1
+        pattern += 'type="([^"]+).*?'  # Eintrag [0] movie oder tv
+        pattern += 'post="(\d+).*?'  # Eintrag [1] ist die Film oder Serien Nr.29224
+        pattern += 'nume="(\d).*?'  # Eintrag [2] ist die Link Nr.1
+        pattern += 'starten([^<]+)'  # Eintrag [3] = sName des Link Eintrag das ! wird als Name verwendet
+        releaseQuality = '>Release:.*?\s*(\d\d\d+)p'  # Hoster Release Quality Kennzeichen
+        isMatch, aResult = cParser().parse(sHtmlContent, pattern)
     if not isMatch: return
     isQuality, sQuality = cParser.parseSingleResult(sHtmlContent, releaseQuality)  # sReleaseQuality auslesen z.B. 1080
     if not isQuality: sQuality = '720'
@@ -321,6 +330,8 @@ def showHosters():
         for sType, sID, sLink, sName in aResult:
             sUrl = 'https://cinemathek.net/wp-json/dooplayer/v2/%s/%s/%s' % (sID, sType, sLink)
             if 'StreamSB' in sName: continue  # StreamSB Offline
+            if '!' in sName: # ! Wird mit aktuellem Hoster Name ersetzt (Abwarten wie das Hosting sich entwickelt)
+                sName = 'VidMoly'
             if cConfig().isBlockedHoster(sName)[0]: continue  # Hoster aus settings.xml oder deaktivierten Resolver ausschließen
             hoster = {'link': sUrl, 'name': sName, 'displayedName': '%s [I][%sp][/I]' % (sName, sQuality), 'quality': sQuality, 'resolveable': True}
             hosters.append(hoster)

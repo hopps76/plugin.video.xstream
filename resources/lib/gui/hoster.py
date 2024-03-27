@@ -219,13 +219,13 @@ class cHosterGui:
 
         if any('quality' in hoster[1] for hoster in ranking):
             try:
-                # Sortiere Hoster nach Qualität
-                if pref_quli != '5' and any('quality' in hoster[1] and int(hoster[1]['quality']) == int(pref_quli) for hoster in ranking):
-                    ranking = sorted(ranking, key=lambda hoster: int('quality' in hoster[1] and hoster[1]['quality']) == int(pref_quli), reverse=True)
+                # Sortiere Hoster nach Qualität (cConfig().getSetting('preferedQuality') == '5')
+                pref_quali = cConfig().getSetting('preferedQuality')
+                if pref_quali != '5' and any('quality' in hoster[1] and int(hoster[1]['quality']) == int(pref_quali) for hoster in ranking):
+                    ranking = sorted(ranking, key=lambda hoster: int('quality' in hoster[1] and hoster[1]['quality']) == int(pref_quali), reverse=True)
                 else:
                 # Sortiere Hoster nach Priorität
-                    ranking = sorted(ranking, key=lambda hoster: 'quality' in hoster[1] and str(hoster[1]['quality']), reverse=True)
-                    #ranking = sorted(ranking, key=lambda hoster: 'quality' in hoster[1] and hoster[1]['quality'], reverse=True)
+                    ranking = sorted(ranking, key=lambda hoster: 'quality' in hoster[1] and int(hoster[1]['quality']), reverse=True)
             except:
                 pass
         # After sorting Quality, we sort for Hoster-Priority :) -Hep 24.01.23
@@ -276,7 +276,9 @@ class cHosterGui:
                 return
 
             self.dialog.update(60, cConfig().getLocalizedString(30143))
-            if (playMode != 'jd') and (playMode != 'jd2') and (playMode != 'pyload') and (cConfig().getSetting('presortHoster') == 'true') and (playMode != 'myjd'):
+            # Für Sitplugin einfach.to mit in automatische Abspielliste aufnehmen (Da Links bei der Überprüfung der Verfügbarkeit gekickt werden)
+            # if (playMode != 'jd') and (playMode != 'jd2') and (playMode != 'pyload') and (cConfig().getSetting('presortHoster') == 'true') and (playMode != 'myjd'):
+            if (siteName != 'einfach') and (playMode != 'jd') and (playMode != 'jd2') and (playMode != 'pyload') and (cConfig().getSetting('presortHoster') == 'true') and (playMode != 'myjd'):
                 siteResult = self.__getPriorities(siteResult)
             if not siteResult:
                 self.dialog.close()
@@ -354,7 +356,12 @@ class cHosterGui:
             self.dialog.update(90, cConfig().getLocalizedString(30143))
             functionName = siteResult[-1]
             del siteResult[-1]
-            hosters = self.__getPriorities(siteResult)
+            # Sitplugin einfach.to bei self.__getPriorities(siteResult) ausschliessen da sonst die Hoster gekickt werden.
+            if siteName == 'einfach':
+                hosters = siteResult
+            else:
+                hosters = self.__getPriorities(siteResult)
+            #hosters = self.__getPriorities(siteResult)
             if not hosters:
                 self.dialog.close()
                 cGui().showInfo('xStream', cConfig().getLocalizedString(30144))

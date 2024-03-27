@@ -10,14 +10,16 @@ import xbmcgui
 import time
 
 from xbmcaddon import Addon
+from xbmcgui import Dialog
 from resources.lib.config import cConfig
 from resources.lib import tools
-from xbmc import LOGINFO as LOGNOTICE, LOGERROR, LOGWARNING, LOGDEBUG, log
+from xbmc import LOGINFO as LOGNOTICE, LOGERROR, LOGWARNING, LOGDEBUG, log, getInfoLabel
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib import updateManager
 from xbmcvfs import translatePath
 
+HEADERMESSAGE = cConfig().getLocalizedString(30151)
 LOGMESSAGE = cConfig().getLocalizedString(30166)
 
 # xStream = xbmcaddon.Addon().getAddonInfo('id')
@@ -84,6 +86,15 @@ def checkDependence(ADDONID):
                 pass
     except Exception as e:
         log(__name__ + ' %s - Exception ' % e, LOGERROR)
+
+
+# Auslesen der installierten Kodi Version und setze danach den Release Branch in den settings
+if 21.0 <= float(xbmc.getInfoLabel('System.BuildVersion')[:4]) <= 21.9:
+    xbmcaddon.Addon().setSetting('xstream.branch.release', 'omega')
+if 20.0 <= float(xbmc.getInfoLabel('System.BuildVersion')[:4]) <= 20.9:
+    xbmcaddon.Addon().setSetting('xstream.branch.release', 'nexus')
+if 19.0 <= float(xbmc.getInfoLabel('System.BuildVersion')[:4]) <= 19.9:
+    xbmcaddon.Addon().setSetting('xstream.branch.release', 'matrix')
 
 
 # Starte xStream Update wenn auf Github verfügbar

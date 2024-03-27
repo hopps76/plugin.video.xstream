@@ -2,7 +2,6 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 
-
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.tools import logger, cParser
@@ -15,15 +14,15 @@ SITE_IDENTIFIER = 'kinox'
 SITE_NAME = 'KinoX'
 SITE_ICON = 'kinox.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'ww18.kinoz.to')
+DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'ww19.kinox.to')
 URL_MAIN = 'https://' + DOMAIN
-#URL_MAIN = 'https://www15.kinoz.to'
+# URL_MAIN = 'https://ww19.kinox.to'
 URL_NEWS = URL_MAIN + '/index.php'
 URL_CINEMA_PAGE = URL_MAIN + '/Kino-Filme.html'
 URL_GENRE_PAGE = URL_MAIN + '/Genre.html'

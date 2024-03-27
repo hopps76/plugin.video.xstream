@@ -7,7 +7,6 @@
 # showSeasons:    6 Stunden
 # showEpisodes:   4 Stunden
 
-import json
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler

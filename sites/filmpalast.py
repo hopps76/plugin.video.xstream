@@ -3,9 +3,9 @@
 # Always pay attention to the translations in the menu!
 # Sprachauswahl für Filme
 # HTML LangzeitCache hinzugefügt
-    #showValue:     24 Stunden
-    #showEntries:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showValue:     24 Stunden
+# showEntries:    6 Stunden
+# showEpisodes:   4 Stunden
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
@@ -18,7 +18,7 @@ SITE_IDENTIFIER = 'filmpalast'
 SITE_NAME = 'FilmPalast'
 SITE_ICON = 'filmpalast.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
@@ -26,7 +26,7 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
 # Domain Abfrage
 DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'filmpalast.to')
 URL_MAIN = 'https://' + DOMAIN
-#URL_MAIN = 'https://filmpalast.to'
+# URL_MAIN = 'https://filmpalast.to'
 URL_MOVIES = URL_MAIN + '/movies/%s'
 URL_SERIES = URL_MAIN + '/serien/view'
 URL_ENGLISH = URL_MAIN + '/search/genre/Englisch'
@@ -44,7 +44,7 @@ def load(): # Menu structure of the site plugin
     cGui().setEndOfDirectory()
 
 
-def showMovieMenu():    # Menu structure of movie menu
+def showMovieMenu(): # Menu structure of movie menu
     params = ParameterHandler()
     sLanguage = cConfig().getSetting('prefLanguage')
     if sLanguage == '0' or '1':    # Alle Sprachen oder Deutsch

@@ -16,7 +16,7 @@ SITE_IDENTIFIER = 'dokus4'
 SITE_NAME = 'Dokus4'
 SITE_ICON = 'dokus4.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)

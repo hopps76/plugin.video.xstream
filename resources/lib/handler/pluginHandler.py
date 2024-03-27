@@ -167,6 +167,7 @@ class cPluginHandler:
                 domain = cConfig().getSetting('plugin_' + provider + '.domain', _domain)
                 base_link = 'http://' + domain + '/'  # URL_MAIN
                 if domain == 'site-maps.cc':  # Falsche Umleitung ausschliessen
+                    xbmcaddon.Addon().setSetting('plugin_' + provider + '.domain', '')  # Falls doch dann lösche Settings Eintrag
                     continue
                 try:
                     if xbmcaddon.Addon().getSetting('plugin_' + provider) == 'false':  # Wenn SitePlugin deaktiviert

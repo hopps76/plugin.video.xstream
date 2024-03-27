@@ -2,9 +2,9 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showValue:     48 Stunden
-    #showEntries:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showValue:     48 Stunden
+# showEntries:    6 Stunden
+# showEpisodes:   4 Stunden
     
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
@@ -17,15 +17,15 @@ SITE_IDENTIFIER = 'movie4k'
 SITE_NAME = 'Movie4k'
 SITE_ICON = 'movie4k.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
-DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'www.movie4k.quest')
+DOMAIN = cConfig().getSetting('plugin_' + SITE_IDENTIFIER + '.domain', 'www.movie4k.today')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://www.movie4k.quest/'
+# URL_MAIN = 'https://www.movie4k.today/'
 URL_KINO = URL_MAIN + 'aktuelle-kinofilme-im-kino'
 URL_MOVIES = URL_MAIN + 'kinofilme-online'
 URL_SERIES = URL_MAIN + 'serienstream-deutsch'

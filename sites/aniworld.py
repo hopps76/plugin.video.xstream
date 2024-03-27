@@ -4,13 +4,12 @@
 # Sprachauswahl für Hoster enthalten.
 # Ajax Suchfunktion enthalten.
 # HTML LangzeitCache hinzugefügt
-    #showValue:     24 Stunden
-    #showAllSeries: 24 Stunden
-    #showEpisodes:   4 Stunden
-    #SSsearch:      24 Stunden
+# showValue:     24 Stunden
+# showAllSeries: 24 Stunden
+# showEpisodes:   4 Stunden
+# SSsearch:      24 Stunden
     
 import xbmcgui
-
 
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
@@ -23,7 +22,7 @@ SITE_IDENTIFIER = 'aniworld'
 SITE_NAME = 'AniWorld'
 SITE_ICON = 'aniworld.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
@@ -31,7 +30,7 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
 # Domain Abfrage
 DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'aniworld.to')
 URL_MAIN = 'https://' + DOMAIN
-#URL_MAIN = 'https://aniworld.to'
+# URL_MAIN = 'https://aniworld.to'
 URL_SERIES = URL_MAIN + '/animes'
 URL_POPULAR = URL_MAIN + '/beliebte-animes'
 URL_NEW_EPISODES = URL_MAIN + '/neue-episoden'
@@ -64,7 +63,6 @@ def load(): # Menu structure of the site plugin
 def showValue():
     params = ParameterHandler()
     sUrl = params.getValue('sUrl')
-    #sHtmlContent = cRequestHandler(sUrl).request()
     oRequest = cRequestHandler(sUrl)
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 24 # HTML Cache Zeit 1 Tag
@@ -87,7 +85,6 @@ def showAllSeries(entryUrl=False, sGui=False, sSearchText=False):
     oGui = sGui if sGui else cGui()
     params = ParameterHandler()
     if not entryUrl: entryUrl = params.getValue('sUrl')
-    #sHtmlContent = cRequestHandler(entryUrl, ignoreErrors=(sGui is not False)).request()
     oRequest = cRequestHandler(entryUrl, ignoreErrors=(sGui is not False))
     if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'true':
         oRequest.cacheTime = 60 * 60 * 24 # HTML Cache Zeit 1 Tag
@@ -359,7 +356,6 @@ def _search(oGui, sSearchText):
 
 
 def SSsearch(sGui=False, sSearchText=False):
-    from json import loads
     oGui = sGui if sGui else cGui()
     params = ParameterHandler()
     params.getValue('sSearchText')

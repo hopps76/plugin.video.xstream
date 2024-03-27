@@ -383,4 +383,13 @@ class cUtil:
         iv = fd[key_size:key_size + iv_size]
         return key, iv
 
+def valid_email(email):
+    # Email Muster
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+
+    # Überprüfen der EMail-Adresse mit dem Muster
+    if re.match(pattern, email):
+        return True
+    else:
+        return False
 

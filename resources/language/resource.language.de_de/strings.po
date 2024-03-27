@@ -1207,6 +1207,14 @@ msgctxt "#30542"
 msgid "All Movies"
 msgstr "Alle Filme"
 
+msgctxt "#30543"
+msgid "Collection"
+msgstr "Kollektionen"
+
+msgctxt "#30544"
+msgid "Popular with "
+msgstr "Beliebt bei "
+
 ############### Site Plugins ###############
 
 msgctxt "#30700"
@@ -1230,7 +1238,7 @@ msgid "HD-Filme"
 msgstr ""
 
 msgctxt "#30705"
-msgid ""
+msgid "Filmkiste"
 msgstr ""
 
 msgctxt "#30706"
@@ -1258,7 +1266,7 @@ msgid "Movie4k"
 msgstr ""
 
 msgctxt "#30712"
-msgid ""
+msgid "Internet Archive"
 msgstr ""
 
 msgctxt "#30713"
@@ -1298,7 +1306,7 @@ msgid "StreamCloud"
 msgstr ""
 
 msgctxt "#30722"
-msgid "Streamen"
+msgid ""
 msgstr ""
 
 msgctxt "#30723"
@@ -1354,3 +1362,27 @@ msgstr "Musikfilm"
 msgctxt "#30806"
 msgid "SciFi film"
 msgstr "Science Fiction"
+
+msgctxt "#30807"
+msgid "Adventure"
+msgstr "Abenteuer"
+
+msgctxt "#30808"
+msgid "Cinema film"
+msgstr "Kinofilm"
+
+msgctxt "#30809"
+msgid "War film"
+msgstr "Kriegsfilm"
+
+msgctxt "#30810"
+msgid "Crime"
+msgstr "Krimi"
+
+msgctxt "#30811"
+msgid "Thriller"
+msgstr "Thriller"
+
+msgctxt "#30812"
+msgid "Western film"
+msgstr "Western"

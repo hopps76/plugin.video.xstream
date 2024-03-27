@@ -1,18 +1,63 @@
-[B]Version: 4.0.8[/B]
+[B]Version: 4.0.9 Release[/B]
 
-01.09.2023 - 05.01.2024
+27.03.2024
 
+ - [streamen] Entfernt da offline
+ - [Cineclix] Kollektionen hinzugefügt, Code Optimierung
+ - [Moflix-Stream] Kollektion hinzugefügt
+ - [KinoGer] KinoGer.be überarbeitet
+		KinoGer.pw hinzugefügt
+		KinoGer.ru hinzugefügt THX an Loki1979 für dein Decrypt
+ - [internet Archive] Sprachfilter (Deutsch, Englisch, Alle Sprachen) hinzugefügt (über Einstellungen)
+ - [Kinoger] Hoster überarbeitet (experimentell)
+		KinoGer.be hinzugefügt
+		KinoGer.ru deaktiviert (Decrypt noch fehlerhaft)
+ - [CineClix] Menü überarbeitet
+		Genres hinzugefügt
+ - [Filmkiste] Menüeintrag Filme/Serien überarbeitet
+ - [Allgemein] Code Optimierungen
+ - [Netzkino] vollständig überarbeitet
+ - [Kinoger] settings.xml Globale Suche deaktiviert
+ - [HDFilme] Domain Aktualisierung
+ - [Kinox] Domain Aktualisierung
+ - [KKiste] Domain Aktualisierung
+ - [Moflix] Kollektion hinzugefügt
+ - [Movie4k] Domain Aktualisierung
+ - [Cinemathek] temporärer sName Hoster Fix
+ - [intern] Code Optimierungen
+ - [Tools] interne Erweiterung
+ - [CineClix] Fix Neue Serien / Top 10 der Woche
+ - [Hoster] Überarbeitung Hoster Sortierung
+ - [Einfach.to] Ausschluss aus Hoster Priorität
+ - [CineClix] Domain Anpassung
+ - [Einfach.to] Qualität hinzugefügt
+ - [Moflix-Stream] Release Jahr hinzugefügt
+		Kollektionen, Neues und Blockbuster hinzugefügt
+ - [PluginHandler] Bei falscher Umleitungsdomain settings Eintrag löschen
+ - [Einfach.to] Seite hinzugefügt
+ - [KinoGer] Stream HD+ von KinoGer hinzugefügt
+		Siteplugin komplett überarbeitet
+		THX an Loki1979 für dein Decryptor
+ - [UpdateManager] Manuelles Update überarbeitet
+ - [Internet Archive] Seite hinzugefügt (Suchmaschine)
+ - [CineClix] Genre erweitert (THX TimeLance89)
+ - [Sprachdateien] hinzugefügt (Nach Update Neustart erforderlich)
+ - [Service] Abfrage Kodi Version und setze Release Branch in den settings
+ - [HDFilme] Aktualisierung Domain
+ - [KKiste] Aktualisierung Domain
+ - [Filmkiste] Seite hinzugefügt
+ - [Sprachdateien] hinzugefügt (Nach Update Neustart erforderlich)
  - [HDFilme] letzte Domain offline (Wechsel auf www.hdfilme.tel)
  - [CheckDomain] überarbeitet. Wenn Seite nicht erreichbar dann Domain löschen.
  - [Updatemanager] überarbeitet für Resolver Update und xStream Versionen
  - [Settings] angepasst für xStream Versionen
  - [Sprachdateien] hinzugefügt (Nach Update Neustart erforderlich)
  - [Cineclix] Film bzw. Serienmenü erstellt 
-   (kleines) Genre (ohne Filterfunktion) hinzugefügt
-   Anpassung Qualitätsanzeige
+		Genre (ohne Filterfunktion) hinzugefügt
+		Anpassung Qualitätsanzeige
  - [Cinemathek] Fix: Nächste Seite 
-   Anpassung Qualitätsanzeige
-   Neue Episoden überarbeitet
+		Anpassung Qualitätsanzeige
+		Neue Episoden überarbeitet
  - [HDFilme] Aktualisierung der Domain
  - [Kino] Aktualisierung der Domain
  - [Moflix-Stream] Anpassung Qualitätsanzeige
@@ -22,11 +67,11 @@
  - [moflix-stream] Fix: Staffeln mit mehr als 30 Episoden wurden nicht korrekt angezeigt
  - [Movieking.cc] deaktiviert
  - [Cineclix] Fix: Erste Staffel wird bei mehr als acht Staffeln nicht mehr angezeigt
- - [xstream] Code maintenance
+ - [xStream] Code maintenance
  - [Movieking] Fix für falsche Domain, temporär nicht erreichbar wegen reCaptcha
  - [Kinofox] Offline -> deaktiviert
  - [Stumbleupon] Offline -> deaktiviert
- - [xstream] Anpassung Zensurmeldung
+ - [xStream] Anpassung Zensurmeldung
  - [Flimmerstube] Vorwärts Blättern funktioniert nicht behoben (requesthandler)
  - [Serienstream] Neuen Proxyserver in Einstellungen übernommen
  - [CineClix] Update Plugin

@@ -4,10 +4,10 @@
 # Sprachauswahl für Hoster enthalten.
 # Ajax Suchfunktion enthalten.
 # HTML LangzeitCache hinzugefügt
-    #showValue:     24 Stunden
-    #showAllSeries: 24 Stunden
-    #showEpisodes:   4 Stunden
-    #SSsearch:      24 Stunden
+# showValue:     24 Stunden
+# showAllSeries: 24 Stunden
+# showEpisodes:   4 Stunden
+# SSsearch:      24 Stunden
     
 # 2022-12-06 Heptamer - Suchfunktion überarbeitet
 
@@ -24,14 +24,14 @@ SITE_IDENTIFIER = 'serienstream'
 SITE_NAME = 'SerienStream'
 SITE_ICON = 'serienstream.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
 
 # Domain Abfrage
 domain = cConfig().getSetting('plugin_serienstream.domain') # Domain Auswahl über die xStream Einstellungen möglich
-#URL_MAIN = 'https://s.to/'
+# URL_MAIN = 'https://s.to/'
 if domain == "186.2.175.5":
     URL_MAIN = 'http://' + domain
     proxy = 'true'
@@ -365,8 +365,6 @@ def _search(oGui, sSearchText):
 
 
 def SSsearch(sGui=False, sSearchText=False):
-
-    from json import loads
     oGui = sGui if sGui else cGui()
     params = ParameterHandler()
     params.getValue('sSearchText')

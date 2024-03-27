@@ -2,9 +2,9 @@
 # Python 3
 # Always pay attention to the translations in the menu!
 # HTML LangzeitCache hinzugefügt
-    #showGenre:     48 Stunden
-    #showEntries:    6 Stunden
-    #showEpisodes:   4 Stunden
+# showGenre:     48 Stunden
+# showEntries:    6 Stunden
+# showEpisodes:   4 Stunden
     
 from resources.lib.handler.ParameterHandler import ParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
@@ -17,7 +17,7 @@ SITE_IDENTIFIER = 'kino'
 SITE_NAME = 'Kino'
 SITE_ICON = 'kino_ws.png'
 
-#Global search function is thus deactivated!
+# Global search function is thus deactivated!
 if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
     SITE_GLOBAL_SEARCH = False
     logger.info('-> [SitePlugin]: globalSearch for %s is deactivated.' % SITE_NAME)
@@ -25,7 +25,7 @@ if cConfig().getSetting('global_search_' + SITE_IDENTIFIER) == 'false':
 # Domain Abfrage
 DOMAIN = cConfig().getSetting('plugin_'+ SITE_IDENTIFIER +'.domain', 'wwv.kino.ws')
 URL_MAIN = 'https://' + DOMAIN + '/'
-#URL_MAIN = 'https://wwv.kino.ws/'
+# URL_MAIN = 'https://wwv.kino.ws/'
 URL_MOVIES = URL_MAIN + 'filme-kostenlos.html'
 URL_SERIES = URL_MAIN + 'serien-kostenlos.html'
 URL_SEARCH = URL_MAIN + 'recherche?_token=kZDYEMkRbBXOKMQbZZOnGOaR9JMeGAjXpzKtj0s3&q=%s'
