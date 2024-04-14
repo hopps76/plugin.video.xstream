@@ -41,6 +41,7 @@ else:
 URL_SERIES = URL_MAIN + '/serien'
 URL_NEW_SERIES = URL_MAIN + '/neu'
 URL_NEW_EPISODES = URL_MAIN + '/neue-episoden'
+URL_WATCHLIST = URL_MAIN + '/account/watchlist'
 URL_POPULAR = URL_MAIN + '/beliebte-serien'
 URL_LOGIN = URL_MAIN + '/login'
 
@@ -58,6 +59,8 @@ def load(): # Menu structure of the site plugin
         params.setParam('sUrl', URL_NEW_SERIES)
         cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30514), SITE_IDENTIFIER, 'showEntries'), params)  # New Series
         params.setParam('sUrl', URL_NEW_EPISODES)
+        cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30514), SITE_IDENTIFIER, 'showEntries'), params)  # Watchlist
+        params.setParam('sUrl', URL_WATCHLIST)
         cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30516), SITE_IDENTIFIER, 'showNewEpisodes'), params)  # New Episodes
         params.setParam('sUrl', URL_POPULAR)
         cGui().addFolder(cGuiElement(cConfig().getLocalizedString(30519), SITE_IDENTIFIER, 'showEntries'), params)  # Popular Series
